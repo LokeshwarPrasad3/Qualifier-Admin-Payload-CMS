@@ -29,7 +29,7 @@ export const Card: React.FC<{
   const { slug, categories, title } = doc || {}
   // Use a type guard to safely access meta property
   const hasMeta = doc && 'meta' in doc
-  const meta = hasMeta ? (doc as any).meta : null
+  const meta = hasMeta ? doc.meta : null
   const { description, image: metaImage } = meta || {}
 
   const hasCategories = categories && Array.isArray(categories) && categories.length > 0
