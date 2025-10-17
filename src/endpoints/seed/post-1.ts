@@ -16,6 +16,9 @@ export const post1: (args: PostArgs) => RequiredDataFromCollectionSlug<'posts'> 
     slug: 'digital-horizons',
     _status: 'published',
     authors: [author],
+    bannerImage: heroImage,
+    description: 'A comprehensive look at the future of digital technology',
+    category: 'web-development',
     content: {
       root: {
         type: 'root',

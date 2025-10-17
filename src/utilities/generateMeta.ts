@@ -24,16 +24,23 @@ export const generateMeta = async (args: {
 }): Promise<Metadata> => {
   const { doc } = args
 
-  const ogImage = getImageURL(doc?.meta?.image)
+  // Handle both Page (with meta) and Post (with seo) types
+  const metaImage =
+    doc && 'meta' in doc ? doc.meta?.image : doc && 'seo' in doc ? doc.seo?.image : null
+  const ogImage = getImageURL(metaImage)
 
-  const title = doc?.meta?.title
-    ? doc?.meta?.title + ' | Payload Website Template'
-    : 'Payload Website Template'
+  const metaTitle =
+    doc && 'meta' in doc ? doc.meta?.title : doc && 'seo' in doc ? doc.seo?.title : null
+  const title = metaTitle ? metaTitle + ' | Qualifier Admin Panel' : 'Qualifier Admin Panel'
+
+  // Get description from either meta or seo
+  const metaDescription =
+    doc && 'meta' in doc ? doc.meta?.description : doc && 'seo' in doc ? doc.seo?.description : null
 
   return {
-    description: doc?.meta?.description,
+    description: metaDescription,
     openGraph: mergeOpenGraph({
-      description: doc?.meta?.description || '',
+      description: metaDescription || '',
       images: ogImage
         ? [
             {
