@@ -18,6 +18,13 @@ type Props = MediaBlockProps & {
   disableInnerContainer?: boolean
 }
 
+import type { Media as MediaType } from '@/payload-types'
+
+export function getCloudinaryUrl(media: MediaType | string | undefined): string | undefined {
+  if (typeof media === 'string') return media
+  return media?.cloudinary?.secure_url || (media as any)?.url || (media as any)?.src
+}
+
 export const MediaBlock: React.FC<Props> = (props) => {
   const {
     captionClassName,
@@ -29,8 +36,10 @@ export const MediaBlock: React.FC<Props> = (props) => {
     disableInnerContainer,
   } = props
 
-  let caption
-  if (media && typeof media === 'object') caption = media.caption
+  const caption = media && typeof media === 'object' ? media.caption : undefined
+
+  // src can be string | StaticImageData | undefined
+const src: string | StaticImageData | undefined = getCloudinaryUrl(media) || staticImage
 
   return (
     <div
@@ -42,11 +51,11 @@ export const MediaBlock: React.FC<Props> = (props) => {
         className,
       )}
     >
-      {(media || staticImage) && (
+      {src && (
         <Media
           imgClassName={cn('border border-border rounded-[0.8rem]', imgClassName)}
-          resource={media}
-          src={staticImage}
+          resource={typeof media === 'string' ? undefined : media}
+          src={src} // no TypeScript error now
         />
       )}
       {caption && (
