@@ -1,12 +1,16 @@
 import type { CollectionConfig } from 'payload'
 
 import {
+  lexicalEditor,
+  HeadingFeature,
   BlocksFeature,
   FixedToolbarFeature,
-  HeadingFeature,
-  HorizontalRuleFeature,
   InlineToolbarFeature,
-  lexicalEditor,
+  HorizontalRuleFeature,
+  UnorderedListFeature,
+  OrderedListFeature,
+  AlignFeature,
+  ChecklistFeature, // optional
 } from '@payloadcms/richtext-lexical'
 
 import { authenticated } from '../../access/authenticated'
@@ -16,6 +20,7 @@ import { Code } from '../../blocks/Code/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
 import { populateAuthors } from './hooks/populateAuthors'
+import populateBannerImageUrl from './hooks/populateBannerImageUrl'
 import { revalidateDelete, revalidatePost } from './hooks/revalidatePost'
 
 import {
@@ -42,10 +47,6 @@ export const Posts: CollectionConfig<'posts'> = {
     title: true,
     slug: true,
     categories: true,
-    meta: {
-      image: true,
-      description: true,
-    },
   },
   admin: {
     defaultColumns: ['title', 'slug', 'updatedAt'],
@@ -72,6 +73,70 @@ export const Posts: CollectionConfig<'posts'> = {
       required: true,
     },
     {
+      name: 'bannerImage',
+      type: 'upload',
+      relationTo: 'media',
+      required: true,
+      admin: {
+        description: 'Select or upload a banner image for the blog post',
+      },
+    },
+    {
+      name: 'bannerImageUrl',
+      type: 'text',
+      access: {
+        update: () => false,
+      },
+      admin: {
+        readOnly: true,
+        description: 'Auto-populated Cloudinary URL for the banner image',
+      },
+    },
+    {
+      name: 'description',
+      type: 'textarea',
+      required: true,
+      admin: {
+        description: 'A brief description of the blog post',
+      },
+    },
+    // Using categories relationship field instead of this select
+    {
+      name: 'category',
+      type: 'select',
+      required: true,
+      options: [
+        {
+          label: 'Web Development',
+          value: 'web-development',
+        },
+        {
+          label: 'Government Exams',
+          value: 'govt-exams',
+        },
+      ],
+      admin: {
+        description: 'Select the main category for this post',
+      },
+    },
+    {
+      name: 'tags',
+      type: 'array',
+      label: 'Tags',
+      minRows: 1,
+      maxRows: 10,
+      fields: [
+        {
+          name: 'tag',
+          type: 'text',
+          required: true,
+        },
+      ],
+      admin: {
+        description: 'Add relevant tags for better searchability',
+      },
+    },
+    {
       type: 'tabs',
       tabs: [
         {
@@ -93,6 +158,10 @@ export const Posts: CollectionConfig<'posts'> = {
                     FixedToolbarFeature(),
                     InlineToolbarFeature(),
                     HorizontalRuleFeature(),
+                    UnorderedListFeature(), // unordered (bullets)
+                    OrderedListFeature(), // ordered (numbers)
+                    AlignFeature(), // alignment (left/center/right/justify)
+                    ChecklistFeature(),
                   ]
                 },
               }),
@@ -100,7 +169,7 @@ export const Posts: CollectionConfig<'posts'> = {
               required: true,
             },
           ],
-          label: 'Content',
+          label: 'Post Content',
         },
         {
           fields: [
@@ -130,10 +199,10 @@ export const Posts: CollectionConfig<'posts'> = {
               relationTo: 'categories',
             },
           ],
-          label: 'Meta',
+          label: 'Related',
         },
         {
-          name: 'meta',
+          name: 'seo',
           label: 'SEO',
           fields: [
             OverviewField({
@@ -217,7 +286,7 @@ export const Posts: CollectionConfig<'posts'> = {
     slugField(),
   ],
   hooks: {
-    afterChange: [revalidatePost],
+    afterChange: [populateBannerImageUrl, revalidatePost],
     afterRead: [populateAuthors],
     afterDelete: [revalidateDelete],
   },

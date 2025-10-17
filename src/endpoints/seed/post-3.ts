@@ -10,6 +10,9 @@ export const post3: (args: PostArgs) => RequiredDataFromCollectionSlug<'posts'> 
     slug: 'dollar-and-sense-the-financial-forecast',
     _status: 'published',
     authors: [author],
+    bannerImage: heroImage,
+    description: 'Financial insights and market forecasts',
+    category: 'web-development',
     content: {
       root: {
         type: 'root',

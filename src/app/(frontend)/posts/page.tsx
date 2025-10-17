@@ -23,7 +23,11 @@ export default async function Page() {
       title: true,
       slug: true,
       categories: true,
-      meta: true,
+      meta: {
+        description: true,
+        image: true,
+      },
+      id: true,
     },
   })
 
@@ -58,6 +62,6 @@ export default async function Page() {
 
 export function generateMetadata(): Metadata {
   return {
-    title: `Payload Website Template Posts`,
+    title: `Qualifier Admin Panel Posts`,
   }
 }

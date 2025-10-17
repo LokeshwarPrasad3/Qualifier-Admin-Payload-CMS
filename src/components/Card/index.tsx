@@ -4,16 +4,21 @@ import useClickableCard from '@/utilities/useClickableCard'
 import Link from 'next/link'
 import React, { Fragment } from 'react'
 
-import type { Post } from '@/payload-types'
+import type { Media as MediaType, Post } from '@/payload-types'
 
 import { Media } from '@/components/Media'
 
-export type CardPostData = Pick<Post, 'slug' | 'categories' | 'meta' | 'title'>
+export type CardPostData = Pick<Post, 'slug' | 'categories' | 'title'> & {
+  meta?: {
+    description?: string | null;
+    image?: string | MediaType | null;
+  } | null;
+}
 
 export const Card: React.FC<{
   alignItems?: 'center'
   className?: string
-  doc?: CardPostData
+  doc?: CardPostData | Post | Partial<Post>
   relationTo?: 'posts'
   showCategories?: boolean
   title?: string
@@ -21,7 +26,10 @@ export const Card: React.FC<{
   const { card, link } = useClickableCard({})
   const { className, doc, relationTo, showCategories, title: titleFromProps } = props
 
-  const { slug, categories, meta, title } = doc || {}
+  const { slug, categories, title } = doc || {}
+  // Use a type guard to safely access meta property
+  const hasMeta = doc && 'meta' in doc
+  const meta = hasMeta ? (doc as any).meta : null
   const { description, image: metaImage } = meta || {}
 
   const hasCategories = categories && Array.isArray(categories) && categories.length > 0

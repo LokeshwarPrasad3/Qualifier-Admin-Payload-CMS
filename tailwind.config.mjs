@@ -60,7 +60,6 @@ const config = {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
         },
-        background: 'hsl(var(--background))',
         border: 'hsla(var(--border))',
         card: {
           DEFAULT: 'hsl(var(--card))',
@@ -94,8 +93,9 @@ const config = {
         warning: 'hsl(var(--warning))',
       },
       fontFamily: {
-        mono: ['var(--font-geist-mono)'],
-        sans: ['var(--font-geist-sans)'],
+        mono: ['var(--font-karla)'],
+        sans: ['var(--font-karla)'],
+        bree: ['var(--font-bree)'],
       },
       keyframes: {
         'accordion-down': {
