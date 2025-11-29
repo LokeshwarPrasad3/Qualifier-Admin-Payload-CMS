@@ -19,7 +19,7 @@ export const homeStatic: RequiredDataFromCollectionSlug<'pages'> = {
                 format: 0,
                 mode: 'normal',
                 style: '',
-                text: 'Qualifier Admin Panel',
+                text: 'Qualifier Blog Admin Panel',
                 version: 1,
               },
             ],

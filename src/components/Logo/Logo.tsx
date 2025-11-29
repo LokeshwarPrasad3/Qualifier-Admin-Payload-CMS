@@ -1,3 +1,4 @@
+'use client'
 import clsx from 'clsx'
 import Link from 'next/link'
 import React from 'react'
@@ -25,7 +26,7 @@ export const Logo = (props: Props) => {
         fetchPriority={priority}
         decoding="async"
         className={clsx('max-w-[9.375rem] w-full h-[34px]', className)}
-        src="https://res.cloudinary.com/doagv0qou/image/upload/v1760727314/qualifier-logo_hmxm4d.png"
+        src="/images/qualifier-logo.png"
       />
       <Link
         href="/"
@@ -36,3 +37,4 @@ export const Logo = (props: Props) => {
     </div>
   )
 }
+export default Logo
